@@ -17,7 +17,8 @@
 距離を測るには、まず両端の **原子** を 1 つずつ指定する必要があります。残基番号と原子名を組み合わせます。
 
 ```
-resi 179 and name ND2          # 179 番残基の ND2 原子
+# 179 番残基の ND2 原子
+resi 179 and name ND2
 chain A and resi 112 and name OE2
 ```
 
@@ -171,6 +172,54 @@ bg_color white
 - [ ] その残基の側鎖を棒で表示し、炭素は緑 (13 残基になる)
 - [ ] 基質が画面の中心にある
 - [ ] シーン `Q5` として保存する
+
+<details>
+<summary>解答例 (クリックで表示)</summary>
+
+解答は一例です。条件を満たしていれば、ほかの書き方や向きでも構いません。
+
+`ex05.pml` の例です。
+
+```
+reinitialize
+fetch 2a65
+bg_color white
+
+# ===== 練習 Q4: 距離を測る =====
+hide everything
+select pair, polymer and resi 112+179
+show cartoon, polymer
+color palegreen, polymer
+show sticks, pair and not name N+C+O
+util.cbag pair
+distance d_q4, resi 179 and name ND2, resi 112 and name OE2
+print(cmd.get_distance("resi 179 and name ND2", "resi 112 and name OE2"))
+orient pair
+zoom pair, 3
+clip slab, 14
+deselect
+scene Q4, store
+
+# ===== 練習 Q5: 基質の周りの残基を選ぶ =====
+hide everything
+select substrate, resn LEU and not polymer
+select near_sub, byres (polymer within 4 of substrate)
+# 13 になる
+print(cmd.count_atoms("near_sub and name CA"))
+show cartoon, polymer
+color palegreen, polymer
+show sticks, substrate
+util.cbay substrate
+show sticks, near_sub and not name N+C+O
+util.cbag near_sub
+orient substrate
+zoom substrate, 7
+clip slab, 14
+deselect
+scene Q5, store
+```
+
+</details>
 
 ### 確認
 

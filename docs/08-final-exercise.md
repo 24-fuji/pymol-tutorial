@@ -150,3 +150,142 @@ scene Q1, store
 向きや拡大率は完成図と完全に同じでなくて構いません。条件を満たしていれば完成です。
 
 論文の試験では、Q1 と Q2 はほぼ全員 (98%) が正解した一方、Q4 (1 原子の指定、76%) と Q5 (距離での選択、68%) の正答率が低めでした。うまくいかないときは、[05 章](05-selection-and-distance.md) の「1 つの原子を選ぶ」と「残基単位に広げる」を見返してください。
+
+---
+
+## 解答例
+
+<details>
+<summary>解答例 (クリックで表示)</summary>
+
+解答は一例です。条件を満たしていれば、ほかの書き方や向きでも構いません。
+
+`templates/fig3a_template.pml` を埋めた例です。
+
+```
+# fig3a_template.pml (解答例)
+reinitialize
+fetch 2a65 2qju
+bg_color white
+# GUI なし (pymol -c) で実行しても背景を白くする (09 章参照)
+set ray_opaque_background, 1
+
+# ===== Q1: Overall structure (全体構造) =====
+hide everything
+show cartoon, 2a65 and polymer
+color green, 2a65 and polymer
+orient 2a65 and polymer
+zoom 2a65 and polymer, 5
+scene Q1, store
+
+# ===== Q2: Show ions (イオンの表示) =====
+hide everything
+show cartoon, 2a65 and polymer
+color green, 2a65 and polymer
+show spheres, 2a65 and resn NA
+color purple, 2a65 and resn NA
+orient 2a65 and resn NA
+zoom 2a65 and resn NA, 6
+clip slab, 16
+scene Q2, store
+
+# ===== Q3: Show residues (残基の表示) =====
+hide everything
+select q3res, 2a65 and polymer and resi 30+108+404
+show cartoon, 2a65 and polymer
+color palegreen, 2a65 and polymer
+show sticks, q3res and not name N+C+O
+util.cbag q3res
+orient q3res
+zoom q3res, 3
+clip slab, 12
+deselect
+scene Q3, store
+
+# ===== Q4: Measure distance (距離の測定) =====
+hide everything
+select q4res, 2a65 and polymer and resi 250+290
+show cartoon, 2a65 and polymer
+color palegreen, 2a65 and polymer
+show sticks, q4res and not name N+C+O
+util.cbag q4res
+distance q4_dist, 2a65 and resi 250 and name NE2, 2a65 and resi 290 and name OE1
+print(cmd.get_distance("2a65 and resi 250 and name NE2", "2a65 and resi 290 and name OE1"))
+orient q4res
+# orient の向きは直前の視点で変わる。破線が隠れるときは回して見やすくする
+turn x, 180
+zoom q4res, 3
+clip slab, 12
+deselect
+scene Q4, store
+
+# ===== Q5: Select neighbors (近くの残基の選択) =====
+hide everything
+select q5res, byres (2a65 and polymer within 6 of (2a65 and resn NA))
+# 25 になる
+print(cmd.count_atoms("q5res and name CA"))
+show cartoon, 2a65 and polymer
+color palegreen, 2a65 and polymer
+show spheres, 2a65 and resn NA
+color purple, 2a65 and resn NA
+show sticks, q5res and not name N+C+O
+util.cbag q5res
+orient 2a65 and resn NA
+zoom 2a65 and resn NA, 7
+clip slab, 16
+deselect
+scene Q5, store
+
+# ===== Q6: Align (重ね合わせ) =====
+hide everything
+# 2qju を 2a65 に重ねる (ログに RMSD が出る)
+align 2qju, 2a65
+show cartoon, (2a65 or 2qju) and polymer
+color green, 2a65
+color cyan, 2qju
+orient 2a65 and polymer
+zoom 2a65 and polymer, 5
+scene Q6, store
+
+# ===== Q7: Map B-factor (B-factor の色分け) =====
+hide everything
+show cartoon, 2a65 and polymer
+spectrum b, blue_white_red, 2a65 and polymer and name CA, minimum=20, maximum=45
+orient 2a65 and polymer
+zoom 2a65 and polymer, 5
+scene Q7, store
+
+# ===== Q8: Electrostatics (静電ポテンシャル) =====
+hide everything
+# remove を使うと Q2・Q5 の Na⁺ も消えるので、タンパク質だけのコピーを作って計算する
+create leut_prot, 2a65 and polymer
+util.protein_vacuum_esp("leut_prot", mode=2)
+disable leut_prot_e_pot
+hide everything, leut_prot
+orient leut_prot
+zoom leut_prot, 5
+scene Q8, store
+
+# ===== 画像の書き出し =====
+scene Q1, animate=0
+png fig3a_q1.png, width=1200, height=1200, dpi=300, ray=1
+scene Q2, animate=0
+png fig3a_q2.png, width=1200, height=1200, dpi=300, ray=1
+scene Q3, animate=0
+png fig3a_q3.png, width=1200, height=1200, dpi=300, ray=1
+scene Q4, animate=0
+png fig3a_q4.png, width=1200, height=1200, dpi=300, ray=1
+scene Q5, animate=0
+png fig3a_q5.png, width=1200, height=1200, dpi=300, ray=1
+scene Q6, animate=0
+png fig3a_q6.png, width=1200, height=1200, dpi=300, ray=1
+scene Q7, animate=0
+png fig3a_q7.png, width=1200, height=1200, dpi=300, ray=1
+scene Q8, animate=0
+png fig3a_q8.png, width=1200, height=1200, dpi=300, ray=1
+
+# ===== セッションの保存 =====
+save fig3a.pse
+```
+
+</details>

@@ -35,7 +35,8 @@ png figure.png, width=2400, height=1800, dpi=300, ray=1
 `png` で `width` と `height` の両方を指定すると、画面と縦横比が違う場合は、上下や左右が画面より広く (または狭く) 写ります。保存する画像と同じ縦横比に画面を合わせておくと、見たままの範囲が保存されます。
 
 ```
-viewport 800, 600       # ビューアを 800 × 600 (4:3) にする
+# ビューアを 800 × 600 (4:3) にする
+viewport 800, 600
 ```
 
 ### Ray と `draw`
@@ -52,7 +53,8 @@ viewport 800, 600       # ビューアを 800 × 600 (4:3) にする
 GUI での表示 (Ray していない状態) の品質は、メニューの `Display` → `Quality` で切り替えられます。`Maximum Quality` にすると、画面上のリボンや球がなめらかになります。
 
 ```
-set antialias, 2        # Ray した画像の縁のギザギザを減らす (初期値 1)
+# Ray した画像の縁のギザギザを減らす (初期値 1)
+set antialias, 2
 ```
 
 ---
@@ -60,9 +62,12 @@ set antialias, 2        # Ray した画像の縁のギザギザを減らす (初
 ## 背景
 
 ```
-bg_color white                          # 背景を白に
-set ray_opaque_background, 1            # 背景を不透明にする
-set ray_opaque_background, 0            # 背景を透明にする
+# 背景を白に
+bg_color white
+# 背景を不透明にする
+set ray_opaque_background, 1
+# 背景を透明にする
+set ray_opaque_background, 0
 ```
 
 背景を **透明** にした PNG は、スライドの色付きの背景や、ほかの図の上に重ねるときに便利です。
@@ -91,8 +96,10 @@ set ray_trace_mode, 1
 輪郭線の色と太さは、次の設定で変えられます。
 
 ```
-set ray_trace_color, grey30     # 輪郭線の色
-set ray_trace_gain, 0.5         # 輪郭線の太さの調整 (大きいほど線が多く・太くなる)
+# 輪郭線の色
+set ray_trace_color, grey30
+# 輪郭線の太さの調整 (大きいほど線が多く・太くなる)
+set ray_trace_gain, 0.5
 ```
 
 > 輪郭線は、画像のピクセル数に対して太さが決まります。大きな画像で書き出すと、線が相対的に細く見えます。
@@ -116,7 +123,8 @@ set ray_trace_gain, 0.5         # 輪郭線の太さの調整 (大きいほど�
 設定は、最後に選択範囲やオブジェクト名を付けると、その部分だけに適用できます。
 
 ```
-set cartoon_transparency, 0.6, 2qju     # 2qju のリボンだけを半透明に
+# 2qju のリボンだけを半透明に
+set cartoon_transparency, 0.6, 2qju
 ```
 
 ---
@@ -145,9 +153,12 @@ set cartoon_transparency, 0.6, 2qju     # 2qju のリボンだけを半透明に
 ## ラベルを整える
 
 ```
-label polymer and resi 25 and name CA, "%s%s" % (resn, resi)       # 「ASP25」
-label polymer and resi 25 and name CA, "%s%s" % (oneletter, resi)  # 「D25」(1 文字表記)
-label polymer and resi 25 and name CA, "Asp%s (%s)" % (resi, chain) # 「Asp25 (A)」
+# 「ASP25」
+label polymer and resi 25 and name CA, "%s%s" % (resn, resi)
+# 「D25」(1 文字表記)
+label polymer and resi 25 and name CA, "%s%s" % (oneletter, resi)
+# 「Asp25 (A)」
+label polymer and resi 25 and name CA, "Asp%s (%s)" % (resi, chain)
 ```
 
 `%s` の部分に、後ろに並べた属性の値が順に入ります。よく使う属性は `resn` (残基名)、`resi` (残基番号)、`chain` (鎖)、`oneletter` (残基の 1 文字表記)、`name` (原子名) です。
@@ -212,6 +223,53 @@ fetch 1hsg
 - [ ] 白い **不透明** な背景で、幅 2400 × 高さ 1800 ピクセル、300 dpi の `1hsg_figure.png` を保存する
 - [ ] 同じ図を **透明な背景** で `1hsg_figure_transparent.png` として保存する
 - [ ] 一連の操作を `ex09.pml` にまとめ、`pymol -cq ex09.pml` (GUI なし) で実行しても同じ 2 枚の画像ができる
+
+<details>
+<summary>解答例 (クリックで表示)</summary>
+
+解答は一例です。条件を満たしていれば、ほかの書き方や向きでも構いません。
+
+`ex09.pml` の例です。
+
+```
+reinitialize
+fetch 1hsg
+bg_color white
+set ray_opaque_background, 1
+
+# 表示: リボン (鎖ごとの色) + 阻害剤 + Asp25
+hide everything
+show cartoon, polymer
+color lightblue, chain A and polymer
+color lightpink, chain B and polymer
+show sticks, resn MK1
+util.cbay resn MK1
+select asp25, polymer and resn ASP and resi 25
+show sticks, asp25 and not name N+C+O
+util.cbag asp25
+
+# ラベル: A 鎖は左、B 鎖は右にずらし、z を大きくして手前に出す
+label asp25 and name CG, "Asp%s (%s)" % (resi, chain)
+set label_size, 18
+set label_color, black
+set label_position, (-4, 2, 15), asp25 and chain A
+set label_position, (4, 2, 15), asp25 and chain B
+
+# 輪郭線付きの描き方
+set ray_trace_mode, 1
+
+orient polymer
+zoom polymer, -4
+deselect
+
+# 不透明な背景で保存
+png 1hsg_figure.png, width=2400, height=1800, dpi=300, ray=1
+# 透明な背景で保存
+set ray_opaque_background, 0
+png 1hsg_figure_transparent.png, width=2400, height=1800, dpi=300, ray=1
+```
+
+</details>
 
 ### 確認
 

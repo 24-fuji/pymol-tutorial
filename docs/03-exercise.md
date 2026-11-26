@@ -50,6 +50,37 @@ PyMOL を起動し、次のどちらかの方法で 4hhb を読み込みます�
 - [ ] Ray (レイトレース) した画像を `4hhb_overview.png` として保存する
 - [ ] セッションを `4hhb_overview.pse` として保存する
 
+<details>
+<summary>解答例 (クリックで表示)</summary>
+
+解答は一例です。条件を満たしていれば、ほかの書き方や向きでも構いません。
+
+GUI で操作した場合も、同じ処理をコマンドで書くと次のようになります (コメントに対応する GUI の操作を書いています)。
+
+```
+reinitialize
+fetch 4hhb
+bg_color white
+# GUI なし (pymol -c) で実行しても背景を白くする (09 章参照)
+set ray_opaque_background, 1
+
+# 表示をすべて消してから、必要なものだけ表示する (水とリン酸イオンは表示しない)
+hide everything
+show cartoon, polymer
+# 鎖ごとに色分け (GUI: C → by chain → by chain)
+util.cbc polymer
+
+# ヘムを棒で表示し、炭素を黄色、ほかの元素は元素の色にする
+show sticks, resn HEM
+util.cbay resn HEM
+
+orient
+png 4hhb_overview.png, width=1200, height=900, dpi=150, ray=1
+save 4hhb_overview.pse
+```
+
+</details>
+
 ---
 
 ## 課題 2: ヘムの結合部位の拡大図
@@ -76,6 +107,53 @@ PyMOL を起動し、次のどちらかの方法で 4hhb を読み込みます�
 - [ ] ヘムと 2 つのヒスチジンが画面の中央に大きく写っていて、ヒスチジンがヘムを上下から挟んでいる様子が分かる
 - [ ] Ray した画像を `4hhb_heme_site.png` として保存する
 - [ ] セッションを `4hhb_heme_site.pse` として保存する
+
+<details>
+<summary>解答例 (クリックで表示)</summary>
+
+解答は一例です。条件を満たしていれば、ほかの書き方や向きでも構いません。
+
+GUI で操作した場合も、同じ処理をコマンドで書くと次のようになります (コメントに対応する GUI の操作を書いています)。
+
+```
+reinitialize
+fetch 4hhb
+bg_color white
+# GUI なし (pymol -c) で実行しても背景を白くする (09 章参照)
+set ray_opaque_background, 1
+
+# A 鎖だけをリボンで表示し、灰色にする
+hide everything
+show cartoon, chain A and polymer
+color grey80, chain A and polymer
+
+# A 鎖のヘムを棒で表示し、炭素を黄色にする
+show sticks, chain A and resn HEM
+util.cbay chain A and resn HEM
+
+# HIS-58 と HIS-87 の側鎖を棒で表示し、炭素を緑にする
+select his_site, chain A and resn HIS and resi 58+87
+show sticks, his_site and not name N+C+O
+util.cbag his_site
+
+# 残基名と残基番号のラベル (GUI: L → residues と同じ書式)
+label his_site and name CA, "%s-%s" % (resn, resi)
+set label_color, black
+set label_size, 24
+# ラベルを手前 (カメラ側) に出して、リボンに隠れないようにする (09 章参照)
+set label_position, (0, 0, 8)
+
+# ヘムを横から見る向きにして拡大する
+orient chain A and resn HEM
+turn x, 90
+zoom (chain A and resn HEM) or his_site, 6
+deselect
+
+png 4hhb_heme_site.png, width=1200, height=900, dpi=150, ray=1
+save 4hhb_heme_site.pse
+```
+
+</details>
 
 ---
 

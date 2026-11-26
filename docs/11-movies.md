@@ -40,9 +40,12 @@ PyMOL の動画は、**フレーム** (パラパラ漫画の 1 枚 1 枚) の並
 ### コマンドで作る
 
 ```
-mset 1 x120                  # 120 フレーム (30 fps で 4 秒)
-movie.roll 1, 120, 1, y      # フレーム 1〜120 で、y 軸 (画面の縦軸) まわりに 1 回転
-mplay                        # 再生して確認
+# 120 フレーム (30 fps で 4 秒)
+mset 1 x120
+# フレーム 1〜120 で、y 軸 (画面の縦軸) まわりに 1 回転
+movie.roll 1, 120, 1, y
+# 再生して確認
+mplay
 ```
 
 `movie.roll 開始, 終了, ループ, 軸` の「ループ」を `1` にすると、最後のフレームが最初のフレームにつながり、繰り返し再生しても途切れません。
@@ -55,7 +58,8 @@ mplay                        # 再生して確認
 
 ```
 mset 1 x120
-movie.rock 1, 120, 30, 0, 1, y     # 30° の幅で左右に往復
+# 30° の幅で左右に往復
+movie.rock 1, 120, 30, 0, 1, y
 ```
 
 ### GUI で作る
@@ -84,9 +88,12 @@ scene closeup, store
 
 # 90 フレームの動画に、シーンを割り当てる
 mset 1 x90
-mview store, 1, scene=overview       # フレーム 1 は全体図
-mview store, 45, scene=closeup       # フレーム 45 で結合部位に寄る
-mview store, 90, scene=overview      # フレーム 90 で全体図に戻る
+# フレーム 1 は全体図
+mview store, 1, scene=overview
+# フレーム 45 で結合部位に寄る
+mview store, 45, scene=closeup
+# フレーム 90 で全体図に戻る
+mview store, 90, scene=overview
 mplay
 ```
 
@@ -99,7 +106,8 @@ mplay
 ### MP4 に書き出す: `movie.produce`
 
 ```
-set ray_trace_frames, 1                     # 各フレームを Ray して書き出す
+# 各フレームを Ray して書き出す
+set ray_trace_frames, 1
 movie.produce movie.mp4, quality=90
 ```
 
@@ -178,6 +186,59 @@ LeuT (2a65) が回転する動画を作ってください。
 - [ ] 30 fps で 4 秒 (120 フレーム) の `leut_roll.mp4` を書き出す
 - [ ] 同じ動画を、幅 480 ピクセル以下の `leut_roll.gif` としても書き出す
 - [ ] 一連の操作を `ex11.pml` にまとめる
+
+<details>
+<summary>解答例 (クリックで表示)</summary>
+
+解答は一例です。条件を満たしていれば、ほかの書き方や向きでも構いません。
+
+`ex11.pml` の例です。`pymol -cq ex11.pml` で実行すると、数分かかります。
+
+```
+reinitialize
+fetch 2a65
+bg_color white
+set ray_opaque_background, 1
+
+# 表示
+hide everything
+show cartoon, polymer
+color palegreen, polymer
+show spheres, resn NA
+color purple, resn NA
+show sticks, resn LEU and not polymer
+util.cbay resn LEU and not polymer
+orient polymer
+
+# 動画の大きさ (MP4 の大きさになる)
+viewport 640, 640
+zoom polymer, 2
+
+# 120 フレーム (30 fps で 4 秒) で y 軸まわりに 1 回転。ループ = 1 でつなぎ目をなくす
+mset 1 x120
+movie.roll 1, 120, 1, y
+
+# 各フレームを Ray して MP4 を書き出す
+set ray_trace_frames, 1
+movie.produce leut_roll.mp4, quality=90
+
+# GIF 用に、連番の PNG も書き出す (保存先のディレクトリを先に作る)
+python
+import os
+os.makedirs("frames", exist_ok=True)
+python end
+mpng frames/frame, width=480, height=480
+```
+
+GIF は、書き出した連番の PNG からターミナルで作ります。30 fps で読み込んで 15 fps に間引くので、MP4 と同じ 4 秒になります。
+
+```bash
+ffmpeg -framerate 30 -i frames/frame%04d.png \
+  -vf "fps=15,scale=480:-1:flags=lanczos,split[a][b];[a]palettegen[p];[b][p]paletteuse" \
+  -loop 0 leut_roll.gif
+```
+
+</details>
 
 ### 確認
 

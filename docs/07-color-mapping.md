@@ -83,7 +83,8 @@ spectrum b, blue_white_red, polymer and name CA, minimum=10, maximum=40
 B-factor などの数値は、選択の条件にも使えます。
 
 ```
-select high_b, polymer and name CA and b > 50     # B-factor が 50 より大きい残基
+# B-factor が 50 より大きい残基
+select high_b, polymer and name CA and b > 50
 ```
 
 ---
@@ -106,8 +107,10 @@ show surface, polymer
 `remove` は、選択した原子を構造から **削除** します (表示を消す `hide` と違い、元に戻せません。必要なら読み込み直します)。
 
 ```
-remove solvent              # 水を削除
-remove resn BOG             # 界面活性剤を削除
+# 水を削除
+remove solvent
+# 界面活性剤を削除
+remove resn BOG
 ```
 
 結晶化のときに結合していた水や界面活性剤が残っていると、表面や静電ポテンシャルの計算に混ざってしまいます。表面を表示する前に削除しておきます。
@@ -117,7 +120,8 @@ remove resn BOG             # 界面活性剤を削除
 `remove` は元の構造から原子を消してしまうため、同じ構造を使っているほかのシーン (イオンを表示したシーンなど) にも影響します。元の構造をそのまま残したいときは、`create` で **必要な部分だけのコピー** を新しいオブジェクトとして作り、そちらを使います。
 
 ```
-create leut_prot, 2a65 and polymer      # 2a65 のタンパク質部分だけをコピーして「leut_prot」を作る
+# 2a65 のタンパク質部分だけをコピーして「leut_prot」を作る
+create leut_prot, 2a65 and polymer
 ```
 
 コピーには水や界面活性剤が含まれないので、`remove` する必要がありません。
@@ -212,6 +216,40 @@ bg_color white
 - [ ] カラーバーは表示しない
 - [ ] タンパク質全体が画面に収まっている
 - [ ] シーン `Q8` として保存する
+
+<details>
+<summary>解答例 (クリックで表示)</summary>
+
+解答は一例です。条件を満たしていれば、ほかの書き方や向きでも構いません。
+
+`ex07.pml` の例です。
+
+```
+reinitialize
+fetch 4hhb
+bg_color white
+
+# ===== 練習 Q7: B-factor を色で表す =====
+hide everything
+show cartoon, polymer
+spectrum b, blue_white_red, polymer and name CA, minimum=10, maximum=40
+orient polymer
+scene Q7, store
+
+# ===== 練習 Q8: 静電ポテンシャルを表示する =====
+hide everything
+# 水を削除
+remove solvent
+# ヘムとリン酸イオンを削除
+remove resn HEM+PO4
+util.protein_vacuum_esp("4hhb", mode=2)
+# カラーバーを非表示にする
+disable 4hhb_e_pot
+orient 4hhb_e_chg
+scene Q8, store
+```
+
+</details>
 
 ### 確認
 

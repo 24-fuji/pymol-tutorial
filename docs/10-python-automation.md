@@ -56,7 +56,8 @@ pymol -cq count_ions.py      # ターミナルから (GUI なし)
 ```
 
 ```
-run count_ions.py            # PyMOL のコマンドラインから
+# PyMOL のコマンドラインから
+run count_ions.py
 ```
 
 ### 2. `.pml` の中に Python を書く
@@ -163,10 +164,14 @@ for pdb in ["2a65", "2qju", "2q6h"]:
 `save` は、拡張子に合わせた形式で、**選択した部分だけ** をファイルに書き出せます。
 
 ```
-save leut_protein.pdb, 2a65 and polymer          # タンパク質だけを PDB 形式で
-save leut_protein.cif, 2a65 and polymer          # mmCIF 形式で
-save leucine.sdf, resn LEU and not polymer       # 基質だけを SDF 形式で (低分子向け)
-save waters.pdb, resn HOH                        # 水分子だけ
+# タンパク質だけを PDB 形式で
+save leut_protein.pdb, 2a65 and polymer
+# mmCIF 形式で
+save leut_protein.cif, 2a65 and polymer
+# 基質だけを SDF 形式で (低分子向け)
+save leucine.sdf, resn LEU and not polymer
+# 水分子だけ
+save waters.pdb, resn HOH
 ```
 
 | 拡張子 | 形式 | 主な用途 |
@@ -186,7 +191,8 @@ save waters.pdb, resn HOH                        # 水分子だけ
 | `extract 新しい名前, 選択` | 選択した部分を元のオブジェクトから **切り出して**、新しいオブジェクトにする |
 
 ```
-extract na_ions, resn NA     # Na⁺ を 2a65 から切り離して、別のオブジェクトにする
+# Na⁺ を 2a65 から切り離して、別のオブジェクトにする
+extract na_ions, resn NA
 ```
 
 ---
@@ -265,6 +271,59 @@ pdb,ion_resi,resn,resi,atom,distance
 画像の例 (向きや拡大率は同じでなくて構いません):
 
 ![確認演習の出力例](images/10-example-output.png)
+
+<details>
+<summary>解答例 (クリックで表示)</summary>
+
+解答は一例です。条件を満たしていれば、ほかの書き方や向きでも構いません。
+
+`ion_sites.py` の例です。
+
+```python
+import csv
+from pymol import cmd
+
+PDB_IDS = ["2a65", "2qju", "2q6h"]
+CUTOFF = 3.0
+
+rows = []
+for pdb in PDB_IDS:
+    cmd.reinitialize()
+    cmd.fetch(pdb)
+    ions = []
+    cmd.iterate(f"{pdb} and resn NA", "ions.append(resi)", space={"ions": ions})
+    for ion in ions:
+        ion_sel = f"{pdb} and resn NA and resi {ion}"
+        atoms = []
+        cmd.iterate(f"({pdb} and polymer) within {CUTOFF} of ({ion_sel})",
+                    "atoms.append((resn, resi, name))", space={"atoms": atoms})
+        for resn, resi, name in atoms:
+            d = cmd.get_distance(f"{pdb} and polymer and resi {resi} and name {name}", ion_sel)
+            rows.append([pdb, ion, resn, resi, name, round(d, 2)])
+    # image
+    cmd.bg_color("white")
+    cmd.set("ray_opaque_background", 1)
+    cmd.hide("everything")
+    cmd.show("cartoon", f"{pdb} and polymer")
+    cmd.color("palegreen", f"{pdb} and polymer")
+    cmd.show("spheres", f"{pdb} and resn NA")
+    cmd.color("purple", f"{pdb} and resn NA")
+    site = f"byres (({pdb} and polymer) within {CUTOFF} of ({pdb} and resn NA))"
+    cmd.show("sticks", f"{site} and not name N+C+O")
+    cmd.util.cbag(site)
+    cmd.orient(f"{pdb} and resn NA")
+    cmd.zoom(f"{pdb} and resn NA", 6)
+    cmd.clip("slab", 16)
+    cmd.png(f"{pdb}_na_site.png", width=800, height=800, ray=1)
+
+with open("ion_sites.csv", "w", newline="") as f:
+    w = csv.writer(f)
+    w.writerow(["pdb", "ion_resi", "resn", "resi", "atom", "distance"])
+    w.writerows(rows)
+print(len(rows), "rows written")
+```
+
+</details>
 
 ### 確認
 

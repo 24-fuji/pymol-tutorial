@@ -118,8 +118,10 @@ RCSB PDB (`https://www.rcsb.org/structure/2A65` のように PDB ID を付けた
 **側鎖だけ** を選ぶときは、主鎖の原子を除きます。
 
 ```
-resi 25 and not name N+C+O        # CA は残す (リボンと側鎖がつながって見える)
-resi 25 and not name N+CA+C+O     # CA も除く
+# CA は残す (リボンと側鎖がつながって見える)
+resi 25 and not name N+C+O
+# CA も除く
+resi 25 and not name N+CA+C+O
 ```
 
 ---
