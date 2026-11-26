@@ -83,7 +83,8 @@ spectrum b, blue_white_red, polymer and name CA, minimum=10, maximum=40
 B-factor などの数値は、選択の条件にも使えます。
 
 ```
-select high_b, polymer and name CA and b > 50     # B-factor が 50 より大きい残基
+# B-factor が 50 より大きい残基
+select high_b, polymer and name CA and b > 50
 ```
 
 ---
@@ -106,8 +107,10 @@ show surface, polymer
 `remove` は、選択した原子を構造から **削除** します (表示を消す `hide` と違い、元に戻せません。必要なら読み込み直します)。
 
 ```
-remove solvent              # 水を削除
-remove resn BOG             # 界面活性剤を削除
+# 水を削除
+remove solvent
+# 界面活性剤を削除
+remove resn BOG
 ```
 
 結晶化のときに結合していた水や界面活性剤が残っていると、表面や静電ポテンシャルの計算に混ざってしまいます。表面を表示する前に削除しておきます。
@@ -117,7 +120,8 @@ remove resn BOG             # 界面活性剤を削除
 `remove` は元の構造から原子を消してしまうため、同じ構造を使っているほかのシーン (イオンを表示したシーンなど) にも影響します。元の構造をそのまま残したいときは、`create` で **必要な部分だけのコピー** を新しいオブジェクトとして作り、そちらを使います。
 
 ```
-create leut_prot, 2a65 and polymer      # 2a65 のタンパク質部分だけをコピーして「leut_prot」を作る
+# 2a65 のタンパク質部分だけをコピーして「leut_prot」を作る
+create leut_prot, 2a65 and polymer
 ```
 
 コピーには水や界面活性剤が含まれないので、`remove` する必要がありません。

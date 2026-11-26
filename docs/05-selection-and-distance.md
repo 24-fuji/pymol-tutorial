@@ -17,7 +17,8 @@
 距離を測るには、まず両端の **原子** を 1 つずつ指定する必要があります。残基番号と原子名を組み合わせます。
 
 ```
-resi 179 and name ND2          # 179 番残基の ND2 原子
+# 179 番残基の ND2 原子
+resi 179 and name ND2
 chain A and resi 112 and name OE2
 ```
 

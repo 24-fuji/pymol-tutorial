@@ -41,8 +41,10 @@ fetch 2a65
 多くのコマンドは「`コマンド名 引数1, 引数2`」の形をしています。2 つ目の引数は、ほとんどの場合 **どの原子に対して実行するか (選択範囲)** です。
 
 ```
-show sticks, resn LEU          # 「残基名が LEU の原子」を棒で表示
-color red, chain A             # 「A 鎖」を赤にする
+# 「残基名が LEU の原子」を棒で表示
+show sticks, resn LEU
+# 「A 鎖」を赤にする
+color red, chain A
 ```
 
 選択範囲を省略すると、すべての原子 (`all`) が対象になります。
@@ -55,13 +57,15 @@ color red, chain A             # 「A 鎖」を赤にする
 
 ```
 # leut.pml
-# 「#」から行末まではコメント (実行されない)
+# 行の先頭が「#」の行はコメント (実行されない)
 reinitialize
 fetch 2a65
 hide everything
 show cartoon
 bg_color white
 ```
+
+> **注意**: PyMOL のコマンドでは、コメントは **行の先頭** に `#` を書いたときだけ有効です。`bg_color white  # 背景を白に` のようにコマンドの後ろに書くと、`#` 以降もコマンドの一部として読まれ、`unknown color` などのエラーになります。コメントは、コマンドの上の行に書いてください。
 
 スクリプトは次のどちらかの方法で実行します。
 
@@ -122,11 +126,16 @@ PyMOL の操作の多くは「どの原子に対して」を指定して行い�
 | `( )` | 先に評価する部分をまとめる |
 
 ```
-polymer and resi 1-100                 # タンパク質の 1〜100 番
-resn NA or resn CL                     # Na⁺ と Cl⁻ (resn NA+CL と同じ)
-not polymer and not solvent            # タンパク質でも水でもないもの
-resn LEU and not polymer               # 基質のロイシン (タンパク質中の Leu は除く)
-polymer and resi 108 and not name N+C+O    # 108 番の側鎖だけ
+# タンパク質の 1〜100 番
+polymer and resi 1-100
+# Na⁺ と Cl⁻ (resn NA+CL と同じ)
+resn NA or resn CL
+# タンパク質でも水でもないもの
+not polymer and not solvent
+# 基質のロイシン (タンパク質中の Leu は除く)
+resn LEU and not polymer
+# 108 番の側鎖だけ
+polymer and resi 108 and not name N+C+O
 ```
 
 > `resn LEU` だけだと、タンパク質の中にある 61 個のロイシン残基もすべて選ばれます。基質のロイシンだけを選ぶには、`not polymer` を付けます。
@@ -168,10 +177,14 @@ deselect
 | `show_as 形式, 選択` | 今の表示を消して、指定した形式 **だけ** にする |
 
 ```
-hide everything                     # 全部消す
-show cartoon, polymer               # タンパク質をリボンで
-show spheres, ions                  # イオンを球で
-show sticks, substrate              # 基質を棒で
+# 全部消す
+hide everything
+# タンパク質をリボンで
+show cartoon, polymer
+# イオンを球で
+show spheres, ions
+# 基質を棒で
+show sticks, substrate
 ```
 
 主な表示形式は [02 の表](02-basic-operations.md#主な表示形式) を参照してください。
@@ -181,9 +194,12 @@ show sticks, substrate              # 基質を棒で
 ## 色を変える: `color` / `bg_color`
 
 ```
-color green, polymer                # タンパク質を緑に
-color purple, resn NA               # Na⁺ を紫に
-bg_color white                      # 背景を白に
+# タンパク質を緑に
+color green, polymer
+# Na⁺ を紫に
+color purple, resn NA
+# 背景を白に
+bg_color white
 ```
 
 色名は `red`、`green`、`blue`、`yellow`、`orange`、`purple`、`grey70` (数字が大きいほど明るい灰色) などが使えます。使える色名は、GUI の **C** ボタンのメニューで確認できます。
@@ -239,9 +255,12 @@ set_view (\
 **シーン** は、その時点の「表示形式・色・視点」をまとめて、名前を付けて保存したものです。1 つのセッションに複数の図を保存しておき、名前を指定して切り替えられます。
 
 ```
-scene Q1, store      # 今の状態を「Q1」として保存
-scene Q1             # 「Q1」を呼び出す
-scene *              # 保存されているシーンの一覧を表示
+# 今の状態を「Q1」として保存
+scene Q1, store
+# 「Q1」を呼び出す
+scene Q1
+# 保存されているシーンの一覧を表示
+scene *
 ```
 
 GUI では、メニューの `Scene` から保存・呼び出しができます。ビューアの下にあるボタンや、`Page Up` / `Page Down` キーでもシーンを順に切り替えられます。

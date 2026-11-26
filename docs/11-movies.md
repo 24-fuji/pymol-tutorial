@@ -40,9 +40,12 @@ PyMOL の動画は、**フレーム** (パラパラ漫画の 1 枚 1 枚) の並
 ### コマンドで作る
 
 ```
-mset 1 x120                  # 120 フレーム (30 fps で 4 秒)
-movie.roll 1, 120, 1, y      # フレーム 1〜120 で、y 軸 (画面の縦軸) まわりに 1 回転
-mplay                        # 再生して確認
+# 120 フレーム (30 fps で 4 秒)
+mset 1 x120
+# フレーム 1〜120 で、y 軸 (画面の縦軸) まわりに 1 回転
+movie.roll 1, 120, 1, y
+# 再生して確認
+mplay
 ```
 
 `movie.roll 開始, 終了, ループ, 軸` の「ループ」を `1` にすると、最後のフレームが最初のフレームにつながり、繰り返し再生しても途切れません。
@@ -55,7 +58,8 @@ mplay                        # 再生して確認
 
 ```
 mset 1 x120
-movie.rock 1, 120, 30, 0, 1, y     # 30° の幅で左右に往復
+# 30° の幅で左右に往復
+movie.rock 1, 120, 30, 0, 1, y
 ```
 
 ### GUI で作る
@@ -84,9 +88,12 @@ scene closeup, store
 
 # 90 フレームの動画に、シーンを割り当てる
 mset 1 x90
-mview store, 1, scene=overview       # フレーム 1 は全体図
-mview store, 45, scene=closeup       # フレーム 45 で結合部位に寄る
-mview store, 90, scene=overview      # フレーム 90 で全体図に戻る
+# フレーム 1 は全体図
+mview store, 1, scene=overview
+# フレーム 45 で結合部位に寄る
+mview store, 45, scene=closeup
+# フレーム 90 で全体図に戻る
+mview store, 90, scene=overview
 mplay
 ```
 
@@ -99,7 +106,8 @@ mplay
 ### MP4 に書き出す: `movie.produce`
 
 ```
-set ray_trace_frames, 1                     # 各フレームを Ray して書き出す
+# 各フレームを Ray して書き出す
+set ray_trace_frames, 1
 movie.produce movie.mp4, quality=90
 ```
 

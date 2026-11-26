@@ -163,8 +163,10 @@ show sticks, lig
 GUI ではオブジェクトパネルの **C** から選びます。コマンドでは次のように書きます。
 
 ```
-color grey80, polymer      # タンパク質を灰色に
-util.cbag organic          # リガンドの炭素を緑、他の元素は元素ごとの色に
+# タンパク質を灰色に
+color grey80, polymer
+# リガンドの炭素を緑、他の元素は元素ごとの色に
+util.cbag organic
 ```
 
 ### 選択を解除する
@@ -218,8 +220,10 @@ set ray_opaque_background, 0
 ### コマンドで保存する
 
 ```
-save 1hsg.pse     # 保存
-load 1hsg.pse     # 開く
+# 保存
+save 1hsg.pse
+# 開く
+load 1hsg.pse
 ```
 
 > `save` は拡張子で形式が決まります。`save 1hsg_edit.pdb` とすれば、PDB ファイルとして書き出せます (この場合、表示状態は保存されません)。

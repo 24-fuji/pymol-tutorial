@@ -91,8 +91,10 @@ GUI では、動かす構造の **A** → `align` → `to molecule (*/CA)` → �
 4m48 には、輸送体 (A 鎖) のほかに、結晶化のために結合させた抗体の断片 (H 鎖、L 鎖) が含まれています。重ね合わせと表示には、輸送体の A 鎖だけを使います。
 
 ```
-align 4m48 and chain A, 2a65      # RMSD = 2.819 (2159 to 2159 atoms)
-super 4m48 and chain A, 2a65      # RMSD = 2.323 (2343 to 2343 atoms)
+# RMSD = 2.819 (2159 to 2159 atoms)
+align 4m48 and chain A, 2a65
+# RMSD = 2.323 (2343 to 2343 atoms)
+super 4m48 and chain A, 2a65
 ```
 
 同じタンパク質どうし (2a65 と 2qju、RMSD 約 0.1 Å) と比べると、RMSD がずっと大きくなります。また、配列を使わない `super` の方が、より多くの原子を使って重ねられています。

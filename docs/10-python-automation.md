@@ -56,7 +56,8 @@ pymol -cq count_ions.py      # ターミナルから (GUI なし)
 ```
 
 ```
-run count_ions.py            # PyMOL のコマンドラインから
+# PyMOL のコマンドラインから
+run count_ions.py
 ```
 
 ### 2. `.pml` の中に Python を書く
@@ -163,10 +164,14 @@ for pdb in ["2a65", "2qju", "2q6h"]:
 `save` は、拡張子に合わせた形式で、**選択した部分だけ** をファイルに書き出せます。
 
 ```
-save leut_protein.pdb, 2a65 and polymer          # タンパク質だけを PDB 形式で
-save leut_protein.cif, 2a65 and polymer          # mmCIF 形式で
-save leucine.sdf, resn LEU and not polymer       # 基質だけを SDF 形式で (低分子向け)
-save waters.pdb, resn HOH                        # 水分子だけ
+# タンパク質だけを PDB 形式で
+save leut_protein.pdb, 2a65 and polymer
+# mmCIF 形式で
+save leut_protein.cif, 2a65 and polymer
+# 基質だけを SDF 形式で (低分子向け)
+save leucine.sdf, resn LEU and not polymer
+# 水分子だけ
+save waters.pdb, resn HOH
 ```
 
 | 拡張子 | 形式 | 主な用途 |
@@ -186,7 +191,8 @@ save waters.pdb, resn HOH                        # 水分子だけ
 | `extract 新しい名前, 選択` | 選択した部分を元のオブジェクトから **切り出して**、新しいオブジェクトにする |
 
 ```
-extract na_ions, resn NA     # Na⁺ を 2a65 から切り離して、別のオブジェクトにする
+# Na⁺ を 2a65 から切り離して、別のオブジェクトにする
+extract na_ions, resn NA
 ```
 
 ---

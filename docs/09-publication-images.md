@@ -35,7 +35,8 @@ png figure.png, width=2400, height=1800, dpi=300, ray=1
 `png` で `width` と `height` の両方を指定すると、画面と縦横比が違う場合は、上下や左右が画面より広く (または狭く) 写ります。保存する画像と同じ縦横比に画面を合わせておくと、見たままの範囲が保存されます。
 
 ```
-viewport 800, 600       # ビューアを 800 × 600 (4:3) にする
+# ビューアを 800 × 600 (4:3) にする
+viewport 800, 600
 ```
 
 ### Ray と `draw`
@@ -52,7 +53,8 @@ viewport 800, 600       # ビューアを 800 × 600 (4:3) にする
 GUI での表示 (Ray していない状態) の品質は、メニューの `Display` → `Quality` で切り替えられます。`Maximum Quality` にすると、画面上のリボンや球がなめらかになります。
 
 ```
-set antialias, 2        # Ray した画像の縁のギザギザを減らす (初期値 1)
+# Ray した画像の縁のギザギザを減らす (初期値 1)
+set antialias, 2
 ```
 
 ---
@@ -60,9 +62,12 @@ set antialias, 2        # Ray した画像の縁のギザギザを減らす (初
 ## 背景
 
 ```
-bg_color white                          # 背景を白に
-set ray_opaque_background, 1            # 背景を不透明にする
-set ray_opaque_background, 0            # 背景を透明にする
+# 背景を白に
+bg_color white
+# 背景を不透明にする
+set ray_opaque_background, 1
+# 背景を透明にする
+set ray_opaque_background, 0
 ```
 
 背景を **透明** にした PNG は、スライドの色付きの背景や、ほかの図の上に重ねるときに便利です。
@@ -91,8 +96,10 @@ set ray_trace_mode, 1
 輪郭線の色と太さは、次の設定で変えられます。
 
 ```
-set ray_trace_color, grey30     # 輪郭線の色
-set ray_trace_gain, 0.5         # 輪郭線の太さの調整 (大きいほど線が多く・太くなる)
+# 輪郭線の色
+set ray_trace_color, grey30
+# 輪郭線の太さの調整 (大きいほど線が多く・太くなる)
+set ray_trace_gain, 0.5
 ```
 
 > 輪郭線は、画像のピクセル数に対して太さが決まります。大きな画像で書き出すと、線が相対的に細く見えます。
@@ -116,7 +123,8 @@ set ray_trace_gain, 0.5         # 輪郭線の太さの調整 (大きいほど�
 設定は、最後に選択範囲やオブジェクト名を付けると、その部分だけに適用できます。
 
 ```
-set cartoon_transparency, 0.6, 2qju     # 2qju のリボンだけを半透明に
+# 2qju のリボンだけを半透明に
+set cartoon_transparency, 0.6, 2qju
 ```
 
 ---
@@ -145,9 +153,12 @@ set cartoon_transparency, 0.6, 2qju     # 2qju のリボンだけを半透明に
 ## ラベルを整える
 
 ```
-label polymer and resi 25 and name CA, "%s%s" % (resn, resi)       # 「ASP25」
-label polymer and resi 25 and name CA, "%s%s" % (oneletter, resi)  # 「D25」(1 文字表記)
-label polymer and resi 25 and name CA, "Asp%s (%s)" % (resi, chain) # 「Asp25 (A)」
+# 「ASP25」
+label polymer and resi 25 and name CA, "%s%s" % (resn, resi)
+# 「D25」(1 文字表記)
+label polymer and resi 25 and name CA, "%s%s" % (oneletter, resi)
+# 「Asp25 (A)」
+label polymer and resi 25 and name CA, "Asp%s (%s)" % (resi, chain)
 ```
 
 `%s` の部分に、後ろに並べた属性の値が順に入ります。よく使う属性は `resn` (残基名)、`resi` (残基番号)、`chain` (鎖)、`oneletter` (残基の 1 文字表記)、`name` (原子名) です。
