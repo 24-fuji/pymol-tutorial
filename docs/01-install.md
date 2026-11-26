@@ -120,8 +120,34 @@ pymol -cq script.py
 | `-d 'cmd'` | 起動後に PyMOL コマンドを実行する |
 | `-k` | `~/.pymolrc` やプラグインを読み込まない |
 | `-K` | `-c` のとき、処理後も終了せずにプロンプトを残す |
+| `-R` | 外部からコマンドを受け付ける RPC サーバーを起動する (下記) |
 
 その他のオプションは `pymol --help` で確認できます。
+
+### 外部のプログラムから操作できるように起動する (`-R`)
+
+`-R` を付けて起動すると、PyMOL が **XML-RPC サーバー** (ポート 9123) を立ち上げ、ほかのプログラムからコマンドを受け付けるようになります。
+
+```bash
+pymol -R
+```
+
+例えば **Claude Code** から操作する場合は、PyMOL を `-R` 付きで起動しておき、Claude Code に「1hsg を読み込んで、リガンドを棒で表示して」のように頼むと、Claude Code がコマンドに変換して PyMOL に送ります。開いている PyMOL の画面がそのまま変わるので、表示を試しながらスクリプトを作るときに便利です。
+
+Python からは、標準ライブラリの `xmlrpc.client` で次のように操作できます。
+
+```python
+import xmlrpc.client
+
+pymol = xmlrpc.client.ServerProxy("http://localhost:9123")
+pymol.do("fetch 1hsg, async=0")     # PyMOL のコマンドを実行する (読み込みが終わるまで待つ)
+pymol.do("show sticks, organic")
+print(pymol.get_names())            # ['1hsg']
+```
+
+> ポート 9123 がすでに使われている場合は、9124、9125、… と次の番号が使われます。
+
+> **注意**: RPC サーバーには認証がありません。待ち受けるのは同じ PC (`localhost`) からの接続だけですが、起動している間は、同じ PC 上のどのプログラムからも PyMOL を操作できます。必要なときだけ `-R` を付けて起動してください。
 
 ### Python から使う
 
