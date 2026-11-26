@@ -137,6 +137,37 @@ bg_color white
 - [ ] シーン `Q6` として保存する
 - [ ] ログに出た RMSD と原子数を確認し、`align` を使った場合と比べる
 
+<details>
+<summary>解答例 (クリックで表示)</summary>
+
+解答は一例です。条件を満たしていれば、ほかの書き方や向きでも構いません。
+
+`ex06.pml` の例です。
+
+```
+reinitialize
+fetch 2a65 4m48
+bg_color white
+
+# ===== 練習 Q6: LeuT とドーパミン輸送体を重ねる =====
+hide everything
+
+# 4m48 の A 鎖を 2a65 に重ねる (ログに RMSD と原子数が出る)
+super 4m48 and chain A, 2a65
+# 比較: align の場合 (動かした後でも、もう一度重ね直すだけなので結果に影響しない)
+# align 4m48 and chain A, 2a65
+
+show cartoon, 2a65 and polymer
+# 抗体 (H、L 鎖) は表示しない
+show cartoon, 4m48 and chain A and polymer
+color grey70, 2a65
+color magenta, 4m48
+orient 2a65 and polymer
+scene Q6, store
+```
+
+</details>
+
 ### 確認
 
 - 向きや拡大率は完成図と完全に同じでなくて構いません。条件を満たしていれば完成です。

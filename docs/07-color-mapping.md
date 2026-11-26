@@ -217,6 +217,40 @@ bg_color white
 - [ ] タンパク質全体が画面に収まっている
 - [ ] シーン `Q8` として保存する
 
+<details>
+<summary>解答例 (クリックで表示)</summary>
+
+解答は一例です。条件を満たしていれば、ほかの書き方や向きでも構いません。
+
+`ex07.pml` の例です。
+
+```
+reinitialize
+fetch 4hhb
+bg_color white
+
+# ===== 練習 Q7: B-factor を色で表す =====
+hide everything
+show cartoon, polymer
+spectrum b, blue_white_red, polymer and name CA, minimum=10, maximum=40
+orient polymer
+scene Q7, store
+
+# ===== 練習 Q8: 静電ポテンシャルを表示する =====
+hide everything
+# 水を削除
+remove solvent
+# ヘムとリン酸イオンを削除
+remove resn HEM+PO4
+util.protein_vacuum_esp("4hhb", mode=2)
+# カラーバーを非表示にする
+disable 4hhb_e_pot
+orient 4hhb_e_chg
+scene Q8, store
+```
+
+</details>
+
 ### 確認
 
 - 向きや拡大率は完成図と完全に同じでなくて構いません。条件を満たしていれば完成です。

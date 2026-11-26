@@ -333,6 +333,58 @@ bg_color white
 - [ ] 基質と 3 残基が画面の中心に大きく写っていて、手前のリボンで隠れていない
 - [ ] シーン `Q3` として保存する
 
+<details>
+<summary>解答例 (クリックで表示)</summary>
+
+解答は一例です。条件を満たしていれば、ほかの書き方や向きでも構いません。
+
+`ex04.pml` の例です。
+
+```
+reinitialize
+fetch 2a65
+bg_color white
+
+# ===== 練習 Q1: 全体構造 =====
+hide everything
+show cartoon, polymer
+color lightblue, polymer and resi 1-260
+color salmon, polymer and resi 261-519
+orient polymer
+scene Q1, store
+
+# ===== 練習 Q2: イオンを表示する =====
+hide everything
+show cartoon, polymer
+color green, polymer
+show spheres, resn CL
+color orange, resn CL
+orient resn CL
+zoom resn CL, 8
+# 手前のリボンを切り落として Cl⁻ を見えるようにする
+clip slab, 14
+scene Q2, store
+
+# ===== 練習 Q3: 残基を表示する =====
+hide everything
+select substrate, resn LEU and not polymer
+select pocket, polymer and resi 108+253+256
+show cartoon, polymer
+color palegreen, polymer
+show sticks, substrate
+util.cbay substrate
+# 側鎖だけ (主鎖の N、C、O を除く)
+show sticks, pocket and not name N+C+O
+util.cbag pocket
+orient pocket or substrate
+zoom pocket or substrate, 1
+clip slab, 10
+deselect
+scene Q3, store
+```
+
+</details>
+
 ### 確認
 
 - 向きや拡大率は完成図と完全に同じでなくて構いません。条件を満たしていれば完成です。

@@ -224,6 +224,53 @@ fetch 1hsg
 - [ ] 同じ図を **透明な背景** で `1hsg_figure_transparent.png` として保存する
 - [ ] 一連の操作を `ex09.pml` にまとめ、`pymol -cq ex09.pml` (GUI なし) で実行しても同じ 2 枚の画像ができる
 
+<details>
+<summary>解答例 (クリックで表示)</summary>
+
+解答は一例です。条件を満たしていれば、ほかの書き方や向きでも構いません。
+
+`ex09.pml` の例です。
+
+```
+reinitialize
+fetch 1hsg
+bg_color white
+set ray_opaque_background, 1
+
+# 表示: リボン (鎖ごとの色) + 阻害剤 + Asp25
+hide everything
+show cartoon, polymer
+color lightblue, chain A and polymer
+color lightpink, chain B and polymer
+show sticks, resn MK1
+util.cbay resn MK1
+select asp25, polymer and resn ASP and resi 25
+show sticks, asp25 and not name N+C+O
+util.cbag asp25
+
+# ラベル: A 鎖は左、B 鎖は右にずらし、z を大きくして手前に出す
+label asp25 and name CG, "Asp%s (%s)" % (resi, chain)
+set label_size, 18
+set label_color, black
+set label_position, (-4, 2, 15), asp25 and chain A
+set label_position, (4, 2, 15), asp25 and chain B
+
+# 輪郭線付きの描き方
+set ray_trace_mode, 1
+
+orient polymer
+zoom polymer, -4
+deselect
+
+# 不透明な背景で保存
+png 1hsg_figure.png, width=2400, height=1800, dpi=300, ray=1
+# 透明な背景で保存
+set ray_opaque_background, 0
+png 1hsg_figure_transparent.png, width=2400, height=1800, dpi=300, ray=1
+```
+
+</details>
+
 ### 確認
 
 - 向きや拡大率は完成図と完全に同じでなくて構いません。条件を満たしていれば完成です。

@@ -187,6 +187,59 @@ LeuT (2a65) が回転する動画を作ってください。
 - [ ] 同じ動画を、幅 480 ピクセル以下の `leut_roll.gif` としても書き出す
 - [ ] 一連の操作を `ex11.pml` にまとめる
 
+<details>
+<summary>解答例 (クリックで表示)</summary>
+
+解答は一例です。条件を満たしていれば、ほかの書き方や向きでも構いません。
+
+`ex11.pml` の例です。`pymol -cq ex11.pml` で実行すると、数分かかります。
+
+```
+reinitialize
+fetch 2a65
+bg_color white
+set ray_opaque_background, 1
+
+# 表示
+hide everything
+show cartoon, polymer
+color palegreen, polymer
+show spheres, resn NA
+color purple, resn NA
+show sticks, resn LEU and not polymer
+util.cbay resn LEU and not polymer
+orient polymer
+
+# 動画の大きさ (MP4 の大きさになる)
+viewport 640, 640
+zoom polymer, 2
+
+# 120 フレーム (30 fps で 4 秒) で y 軸まわりに 1 回転。ループ = 1 でつなぎ目をなくす
+mset 1 x120
+movie.roll 1, 120, 1, y
+
+# 各フレームを Ray して MP4 を書き出す
+set ray_trace_frames, 1
+movie.produce leut_roll.mp4, quality=90
+
+# GIF 用に、連番の PNG も書き出す (保存先のディレクトリを先に作る)
+python
+import os
+os.makedirs("frames", exist_ok=True)
+python end
+mpng frames/frame, width=480, height=480
+```
+
+GIF は、書き出した連番の PNG からターミナルで作ります。30 fps で読み込んで 15 fps に間引くので、MP4 と同じ 4 秒になります。
+
+```bash
+ffmpeg -framerate 30 -i frames/frame%04d.png \
+  -vf "fps=15,scale=480:-1:flags=lanczos,split[a][b];[a]palettegen[p];[b][p]paletteuse" \
+  -loop 0 leut_roll.gif
+```
+
+</details>
+
 ### 確認
 
 - MP4 を動画プレーヤーで再生し、長さが 4 秒であることを確認してください。
