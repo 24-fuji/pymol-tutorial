@@ -61,6 +61,14 @@
 - [x] **07. 情報を色で表す** (`docs/07-color-mapping.md`) → Q7、Q8
 - [x] **08. 最終課題: Fig 3A を再現する** (`docs/08-final-exercise.md`、`templates/fig3a_template.pml`)
 
+### 実践編 (08 章の後)
+
+[PyMOL Wiki - Practical Pymol for Beginners](https://wiki.pymol.org/index.php/Practical_Pymol_for_Beginners) を参考に、Fig 3A の再現に続いて、実際の研究・発表で使う技術をまとめた。
+
+- [x] **09. 論文・スライド用の図を作る** (`docs/09-publication-images.md`): 画像の大きさと dpi、背景の透明化、`ray_trace_mode`、見た目の設定、プリセット、ラベル。演習は 1hsg
+- [x] **10. Python で自動化する** (`docs/10-python-automation.md`): `cmd` API、`iterate`、CSV 出力、複数構造の一括処理、`save` / `extract`、`log_open`。演習は LeuT 3 構造の Na⁺ 配位残基の表
+- [x] **11. 動画を作る** (`docs/11-movies.md`): `mset`、`movie.roll` / `rock`、シーン間の動画、`movie.produce`、`mpng` + ffmpeg (MP4 / GIF)。演習は 2a65 の回転動画
+
 ### 各章の確認演習と最終課題の対応
 
 各章の確認演習 (練習 Q1〜Q8) は、最終課題と同じ種類の図を **別の対象** で作るようにして、最終課題の答えにならないようにしている。
@@ -80,6 +88,8 @@
 
 - PyMOL 3.x は mmCIF の「見えていない残基」を座標なし・B-factor 0 の原子として読み込む。`spectrum b` の自動範囲が 0 から始まるため、07 で注意書きと範囲指定を教えている
 - `util.protein_vacuum_esp` は選択範囲ではなくオブジェクト名しか受け付けない。最終課題では `remove` を使うと Q2・Q5 の Na⁺ まで消えるため、`create` を 07 で教えている
+- `ray_opaque_background` の初期値は -1 で、`pymol -c` で実行すると背景が透明になる。09 で注意している
+- `mpng` は保存先のディレクトリが無いとエラーになる。`log_open` は `@` で実行したスクリプトの中身を記録しない
 - `orient` の結果 (向きの裏表) は直前の視点に依存する。完成図の向きは目安であり、各演習で「向きは完全に同じでなくてよい」と明記している
 
 ### 残っていること
