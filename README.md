@@ -12,3 +12,7 @@ WSL2 (Ubuntu) 上で PyMOL を使うためのチュートリアルです。
 6. [構造の重ね合わせ](docs/06-structural-alignment.md)
 7. [情報を色で表す](docs/07-color-mapping.md)
 8. [最終課題: 論文 Fig 3A を再現する](docs/08-final-exercise.md)
+
+### 実践編
+
+9. [論文・スライド用の図を作る](docs/09-publication-images.md)
